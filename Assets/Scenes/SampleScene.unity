@@ -1013,7 +1013,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 20
-  mouseSensitivity: 100
+  mouseSensitivity: 1
+  gravity: -9.81
+  jumpHeight: 1
 --- !u!114 &2145999716
 MonoBehaviour:
   m_ObjectHideFlags: 0
