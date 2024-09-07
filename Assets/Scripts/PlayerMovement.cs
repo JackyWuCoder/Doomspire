@@ -7,6 +7,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 5.0f;
     [SerializeField] private float rotationSpeed = 700.0f;
     private Rigidbody rb;
+    private float moveX;
+    private float moveZ;
+    private float mouseX;
 
     // Start is called before the first frame update
     void Start()
@@ -17,25 +20,34 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GetInput();
+    }
+
+    private void FixedUpdate()
+    {
         MovePlayer();
         RotatePlayer();
     }
 
-    private void MovePlayer()
+    private void GetInput()
     {
         // A-D keys for left-right movement
-        float moveX = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
+        moveX = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
         // W-S keys for forward-backward movement
-        float moveY = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
-        
-        Vector3 movement = transform.right * moveX + transform.forward * moveY;
+        moveZ = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
+        // Mouse X-axis input for rotation around Y-axis
+        mouseX = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
+    }
+
+    private void MovePlayer()
+    {
+        Vector3 movement = transform.right * moveX + transform.forward * moveZ;
         rb.MovePosition(transform.position + movement);
     }
 
     private void RotatePlayer()
     {
-        // Mouse X-axis input for rotation around Y-axis
-        float mouseX = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
-        transform.Rotate(0, mouseX, 0);
+        Quaternion targetRotation = Quaternion.Euler(0, rb.rotation.eulerAngles.y + mouseX, 0);
+        rb.MoveRotation(targetRotation);
     }
 }
